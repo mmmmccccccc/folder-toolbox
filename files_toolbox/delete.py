@@ -47,10 +47,16 @@ def run(folder: str, confirm=ui.ask, dry_run: bool = False, out=print) -> str | 
     rows = plan(folder)
     out(ui.render(rows, folder))
     changes = [(f, a) for f, a in rows if a.action != "keep"]
-    if not changes:
-        return None
     if dry_run:
         out("dry run: nothing was changed.")
+        return None
+    if not changes:
+        # nothing to delete, but the vault still has to lose the files the user's setting
+        # says are past their days, otherwise they only leave on a day something is deleted
+        _prune_records(folder, settings)
+        gone = prune_vault(folder, settings)
+        if gone:
+            out(f"done: {gone} files left the vault, nothing to delete in the folder")
         return None
     if not confirm():
         out("stopped: nothing was changed.")

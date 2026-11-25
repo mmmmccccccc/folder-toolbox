@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 
-from files_toolbox import delete, move, record, rename, restore, scan, ui
+from files_toolbox import delete, move, record, rename, restore, rules, scan, ui
 from files_toolbox.settings import Settings
 from tests import make_fixtures
 
@@ -108,8 +108,12 @@ def test_move_files_by_type_and_back(demo):
 
 
 def test_a_file_already_in_its_folder_is_left_alone(demo):
-    rows = dict((f.rel, a) for f, a in move.plan(demo))
-    assert rows["already-here.jpg"].action == "keep"
+    # the folder of a run is the top level, so a photo inside Photos/ is not in the plan at
+    # all; when the same file is offered to the rule, the rule keeps it where it is
+    assert "Photos/already-here.jpg" not in dict((f.rel, a) for f, a in move.plan(demo))
+    deep = [f for f in scan.scan(demo, recursive=True) if f.rel.endswith("already-here.jpg")]
+    assert deep, "the fixture should hold a photo inside Photos/"
+    assert rules.decide_move(deep[0]).action == "keep"
 
 
 # ---------------------------------------------------------------- restore

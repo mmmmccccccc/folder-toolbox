@@ -89,3 +89,8 @@ characters, and timestamps set by hand, so the rules can be checked against know
 - Windows only (the right-click menu is a Windows feature). The programs themselves are
   plain Python and run anywhere for testing.
 - No network access, no telemetry, no API keys.
+
+## Who wrote what
+
+The test cases and the code were generated with AI. The design, the running of the
+tests, the documentation and the report are mine.
