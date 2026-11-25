@@ -1,5 +1,5 @@
 $ python -m files_toolbox delete demo/project
-folder: C:\IIS Assessment 2\folder-toolbox\demo\project
+folder: demo/project
 
 5 changes, 10 files left alone:
 
@@ -10,10 +10,10 @@ folder: C:\IIS Assessment 2\folder-toolbox\demo\project
   delete    setup.tmp  ->  vault                             temporary file, 2 days old   (high risk)
 
 risk = how hard the change is to undo.
-done: 5 files moved to the vault, record delete_2026-11-25-2051.tbx
+done: 5 files moved to the vault, record delete_2026-11-25-2054.tbx
 
 $ python -m files_toolbox rename demo/project
-folder: C:\IIS Assessment 2\folder-toolbox\demo\project
+folder: demo/project
 
 4 changes, 6 files left alone:
 
@@ -23,10 +23,10 @@ folder: C:\IIS Assessment 2\folder-toolbox\demo\project
   rename    screen shot 2025.png  ->  screen-shot-2025.png   name has a copy marker, a double space or a trailing space   (low risk)
 
 risk = how hard the change is to undo.
-done: 4 files renamed, record name_2026-11-25-2051.tbx
+done: 4 files renamed, record name_2026-11-25-2054.tbx
 
 $ python -m files_toolbox move demo/project
-folder: C:\IIS Assessment 2\folder-toolbox\demo\project
+folder: demo/project
 
 9 changes, 1 file left alone:
 
@@ -36,51 +36,24 @@ folder: C:\IIS Assessment 2\folder-toolbox\demo\project
   move      meeting-notes.docx  ->  Documents/               .docx belongs with the other documents   (low risk)
   move      naïve-café.txt  ->  Documents/                   .txt belongs with the other documents   (low risk)
   move      notes.txt  ->  Documents/                        .txt belongs with the other documents   (low risk)
+  move      reading-notes.md  ->  Documents/                 .md belongs with the other documents   (low risk)
   move      screen-shot-2025.png  ->  Photos/                .png belongs with the other photos   (low risk)
   move      UPPER.TXT  ->  Documents/                        .txt belongs with the other documents   (low risk)
-  move      阅读笔记.md  ->  Documents/                          .md belongs with the other documents   (low risk)
 
 risk = how hard the change is to undo.
-done: 9 files moved, record move_2026-11-25-2051.tbx
+done: 9 files moved, record move_2026-11-25-2054.tbx
 
 $ python -m files_toolbox restore demo/project --type delete --find invoice --number 1
 records, newest first:
 
-  1. delete 2026-11-25-2051       1 delete
+  1. delete 2026-11-25-2054       1 delete
 
   delete   _vault\invoice-03.pdf  ->  invoice-03.pdf
 
-done: 1 of 1 back, record restore_2026-11-25-2051.tbx
+done: 1 of 1 back, record restore_2026-11-25-2054.tbx
 
-records in the folder:
-  delete_2026-11-25-2051.tbx
-      # delete 2026-11-25 20:51
-      # every line: action, path before, path after
-      delete	holiday-photo.jpg	_vault\holiday-photo.jpg
-      delete	invoice-03.pdf	_vault\invoice-03.pdf
-      delete	old.zip	_vault\old.zip
-      delete	report.bak	_vault\report.bak
-      delete	setup.tmp	_vault\setup.tmp
-  move_2026-11-25-2051.tbx
-      # move 2026-11-25 20:51
-      # every line: action, path before, path after
-      move	archive.7z	Archives\archive.7z
-      move	clip.mp4	Video\clip.mp4
-      move	draft.docx	Documents\draft.docx
-      move	meeting-notes.docx	Documents\meeting-notes.docx
-      move	naïve-café.txt	Documents\naïve-café.txt
-      move	notes.txt	Documents\notes.txt
-      move	screen-shot-2025.png	Photos\screen-shot-2025.png
-      move	UPPER.TXT	Documents\UPPER.TXT
-      move	阅读笔记.md	Documents\阅读笔记.md
-  name_2026-11-25-2051.tbx
-      # name 2026-11-25 20:51
-      # every line: action, path before, path after
-      rename	  draft  copy.docx	draft.docx
-      rename	meeting notes (1).docx	meeting-notes.docx
-      rename	naïve café.txt	naïve-café.txt
-      rename	screen shot 2025.png	screen-shot-2025.png
-  restore_2026-11-25-2051.tbx
-      # restore 2026-11-25 20:51
-      # every line: action, path before, path after
-      delete	invoice-03.pdf	_vault\invoice-03.pdf
+$ ls demo/project/*.tbx
+demo/project/delete_2026-11-25-2054.tbx
+demo/project/move_2026-11-25-2054.tbx
+demo/project/name_2026-11-25-2054.tbx
+demo/project/restore_2026-11-25-2054.tbx

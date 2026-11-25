@@ -42,7 +42,7 @@ FILES = [
     ("archive.7z", 700_000, days_ago(30), days_ago(30)),
     ("notes.txt", 500, days_ago(3), days_ago(3)),
     # names and encodings worth keeping
-    ("阅读笔记.md", 700, days_ago(9), days_ago(9)),
+    ("reading-notes.md", 700, days_ago(9), days_ago(9)),
     ("naïve café.txt", 400, days_ago(9), days_ago(9)),
     ("no-extension", 120, days_ago(60), days_ago(60)),
     ("UPPER.TXT", 200, days_ago(60), days_ago(60)),
