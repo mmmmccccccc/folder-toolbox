@@ -90,7 +90,48 @@ characters, and timestamps set by hand, so the rules can be checked against know
   plain Python and run anywhere for testing.
 - No network access, no telemetry, no API keys.
 
+## A real run
+
+`docs/real-run.txt` holds one run of the four programs on the fixture folder, copied as it
+was printed:
+
+```
+$ python -m files_toolbox delete demo/project
+5 changes, 10 files left alone:
+
+  delete    holiday-photo.jpg  ->  vault    not opened for 2.5 years   (high risk)
+  delete    invoice-03.pdf  ->  vault       not opened for 2.0 years   (high risk)
+  delete    old.zip  ->  vault              not opened for 1.0 years   (high risk)
+  delete    report.bak  ->  vault           temporary file, 40 days old   (high risk)
+  delete    setup.tmp  ->  vault            temporary file, 2 days old   (high risk)
+
+done: 5 files moved to the vault, record delete_2026-11-25-2051.tbx
+```
+
+rename then tidied 4 names, move filed 9 files into Video, Documents, Photos and Archives,
+and `restore --find invoice --number 1` put `invoice-03.pdf` back and wrote
+`restore_2026-11-25-2051.tbx`. The records themselves are in `demo/project/`.
+
+## The right-click menu
+
+`python -m files_toolbox install-menu` writes four entries under
+`HKEY_CURRENT_USER\Software\Classes\Directory\shell\folder-toolbox`, one per program,
+each running it on the folder that was right-clicked. `--remove` takes them out again, and
+`--dry-run` prints the four keys without writing anything. Nothing outside the current
+user's account is touched and no administrator is needed. On an account that refuses the
+write the command says so and the four programs still run from the command line, for
+example `python -m files_toolbox delete DIR`.
+
 ## Who wrote what
 
 The test cases and the code were generated with AI. The design, the running of the
 tests, the documentation and the report are mine.
+
+Two places where the generated code was wrong and the fix is mine:
+
+1. The first delete moved a file into the vault and kept its old timestamp, so a file three
+   years old was past the retention on the day it arrived and was erased at the next run.
+   The file is now touched on the way in, and
+   `test_delete_in_the_vault_starts_its_clock_at_the_deletion` holds that.
+2. The first rename overwrote a file that already had the tidy name. It now steps to `_2`
+   instead, and `test_rename_does_not_overwrite` holds that.

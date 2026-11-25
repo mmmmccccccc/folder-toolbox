@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 
-from files_toolbox import delete, move, record, rename, restore, rules, scan, ui
+from files_toolbox import delete, menu, move, record, rename, restore, rules, scan, ui
 from files_toolbox.settings import Settings
 from tests import make_fixtures
 
@@ -151,3 +151,26 @@ def test_closed_input_stops(monkeypatch):
         raise EOFError
     monkeypatch.setattr("builtins.input", boom)
     assert ui.ask() is False
+
+def test_restore_finds_a_record_by_the_text_of_a_path(demo):
+    delete.run(demo, confirm=yes, out=quiet)
+    all_records = restore.records(demo)
+    assert all_records, "delete should have written one record"
+    first = all_records[0][1][0]
+    needle = os.path.basename(first.old).rsplit(".", 1)[0].upper()
+    hit = restore.records(demo, find=needle)
+    assert hit, "the text of the path is not case sensitive"
+    assert all(any(needle.lower() in e.old.lower() or needle.lower() in e.new.lower() for e in entries)
+               for _n, entries in hit)
+    assert restore.records(demo, find="nothing-with-this-name") == []
+
+
+def test_menu_entries_name_the_four_programs_and_pass_the_folder():
+    rows = menu.entries()
+    assert len(rows) == 5
+    assert rows[0][0].endswith("folder-toolbox")
+    commands = {key.rsplit("\\", 1)[-1]: command for key, _label, command in rows[1:]}
+    assert set(commands) == {"delete", "rename", "move", "restore"}
+    for name, command in commands.items():
+        assert f"-m files_toolbox {name}" in command
+        assert command.rstrip().endswith('"%1"')

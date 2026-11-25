@@ -27,7 +27,8 @@ def render(rows: list[tuple[FileInfo, Action]], folder: str) -> str:
     if not changes:
         out.append("nothing to change in this folder.")
         return "\n".join(out)
-    out.append(f"{len(changes)} changes, {kept} files left alone:")
+    one = "file" if kept == 1 else "files"
+    out.append(f"{len(changes)} changes, {kept} {one} left alone:")
     out.append("")
     for f, a in changes:
         out.append("  " + line_for(f, a))

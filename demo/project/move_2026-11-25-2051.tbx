@@ -1,0 +1,11 @@
+# move 2026-11-25 20:51
+# every line: action, path before, path after
+move	archive.7z	Archives\archive.7z
+move	clip.mp4	Video\clip.mp4
+move	draft.docx	Documents\draft.docx
+move	meeting-notes.docx	Documents\meeting-notes.docx
+move	naïve-café.txt	Documents\naïve-café.txt
+move	notes.txt	Documents\notes.txt
+move	screen-shot-2025.png	Photos\screen-shot-2025.png
+move	UPPER.TXT	Documents\UPPER.TXT
+move	阅读笔记.md	Documents\阅读笔记.md

@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import delete, move, rename, restore, scan, ui
+from . import delete, menu, move, rename, restore, scan, ui
 from .settings import Settings
 
 
@@ -33,8 +33,14 @@ def cmd_move(args) -> int:
 
 def cmd_restore(args) -> int:
     path = restore.run(args.folder, op=args.type, pick=args.number,
-                       confirm=_confirm(args), dry_run=args.dry_run)
+                       confirm=_confirm(args), dry_run=args.dry_run, find=args.find)
     return 0 if path or args.dry_run else 1
+
+
+def cmd_install_menu(args) -> int:
+    if args.remove:
+        return menu.remove(dry_run=args.dry_run)
+    return 0 if menu.install(dry_run=args.dry_run) else 1
 
 
 def cmd_settings(args) -> int:
@@ -76,9 +82,15 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("folder")
     r.add_argument("--type", choices=["delete", "name", "move", "restore"], default=None)
     r.add_argument("--number", type=int, default=0, help="which record, 1 is the newest")
+    r.add_argument("--find", default=None, help="only records whose path holds this text")
     r.add_argument("--dry-run", action="store_true")
     r.add_argument("-y", "--yes", action="store_true")
     r.set_defaults(func=cmd_restore)
+
+    i = sub.add_parser("install-menu", help="put the four programs on the folder right-click menu")
+    i.add_argument("--remove", action="store_true", help="take the entries out again")
+    i.add_argument("--dry-run", action="store_true", help="print the registry entries and stop")
+    i.set_defaults(func=cmd_install_menu)
 
     s = sub.add_parser("settings", help="vault days and records per operation")
     s.add_argument("--vault-days", type=int, default=None)

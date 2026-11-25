@@ -1,0 +1,7 @@
+# delete 2026-11-25 20:51
+# every line: action, path before, path after
+delete	holiday-photo.jpg	_vault\holiday-photo.jpg
+delete	invoice-03.pdf	_vault\invoice-03.pdf
+delete	old.zip	_vault\old.zip
+delete	report.bak	_vault\report.bak
+delete	setup.tmp	_vault\setup.tmp

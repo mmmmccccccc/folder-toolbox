@@ -8,10 +8,18 @@ import shutil
 from . import record, scan, ui
 
 
-def records(folder: str, op: str | None = None) -> list[tuple[str, list[record.Entry]]]:
+def records(folder: str, op: str | None = None, find: str | None = None) -> list[tuple[str, list[record.Entry]]]:
+    """Records newest first. ``find`` keeps only the records whose old or new path holds the text."""
     out = []
+    needle = (find or "").lower()
     for name in record.list_records(folder, op):
-        out.append((name, record.read_record(os.path.join(folder, name))))
+        entries = record.read_record(os.path.join(folder, name))
+        if needle:
+            entries = [e for e in entries
+                       if needle in e.old.lower() or needle in e.new.lower()]
+            if not entries:
+                continue
+        out.append((name, entries))
     return out
 
 
@@ -52,10 +60,11 @@ def undo(folder: str, entries: list[record.Entry], out=print) -> int:
     return done
 
 
-def run(folder: str, op: str | None = None, pick=0, confirm=ui.ask, dry_run: bool = False, out=print) -> str | None:
-    items = records(folder, op)
+def run(folder: str, op: str | None = None, pick=0, confirm=ui.ask, dry_run: bool = False, out=print,
+        find: str | None = None) -> str | None:
+    items = records(folder, op, find)
     if not items:
-        out("no records in this folder.")
+        out("no records match that text." if find else "no records in this folder.")
         return None
     out(menu(items))
     if dry_run:
