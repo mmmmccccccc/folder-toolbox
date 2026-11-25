@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import delete, restore, scan, ui
+from . import delete, move, rename, restore, scan, ui
 from .settings import Settings
 
 
@@ -18,6 +18,16 @@ def _confirm(args):
 def cmd_delete(args) -> int:
     folder = args.folder
     path = delete.run(folder, confirm=_confirm(args), dry_run=args.dry_run)
+    return 0 if path or args.dry_run else 1
+
+
+def cmd_rename(args) -> int:
+    path = rename.run(args.folder, confirm=_confirm(args), dry_run=args.dry_run)
+    return 0 if path or args.dry_run else 1
+
+
+def cmd_move(args) -> int:
+    path = move.run(args.folder, confirm=_confirm(args), dry_run=args.dry_run)
     return 0 if path or args.dry_run else 1
 
 
@@ -50,6 +60,18 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("-y", "--yes", action="store_true", help="skip the question")
     d.set_defaults(func=cmd_delete)
 
+    n = sub.add_parser("rename", help="tidy names that carry copy markers")
+    n.add_argument("folder")
+    n.add_argument("--dry-run", action="store_true")
+    n.add_argument("-y", "--yes", action="store_true")
+    n.set_defaults(func=cmd_rename)
+
+    m = sub.add_parser("move", help="file by type into subfolders")
+    m.add_argument("folder")
+    m.add_argument("--dry-run", action="store_true")
+    m.add_argument("-y", "--yes", action="store_true")
+    m.set_defaults(func=cmd_move)
+
     r = sub.add_parser("restore", help="read the records and put things back")
     r.add_argument("folder")
     r.add_argument("--type", choices=["delete", "name", "move", "restore"], default=None)
@@ -66,6 +88,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # a file called "naïve café.txt" must not crash the list on a console that is not utf-8
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (ValueError, OSError):
+                pass
     args = build_parser().parse_args(argv)
     try:
         scan.scan(args.folder) if hasattr(args, "folder") else None
